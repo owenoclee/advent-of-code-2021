@@ -1,28 +1,32 @@
 import { Handler } from "../handler.ts";
 
-const dive = (instructions: string[]) => {
-  const depth = instructions
-    .filter((i) => ["u", "d"].includes(i[0]))
+const dive = (instructions: string[], useAim: boolean) => {
+  const pos = instructions
     .reduce((acc, i) => {
+      let { vertical, horizontal, aim } = acc;
       const [dir, n] = i.split(" ");
-      if (dir[0] === "u") {
-        return acc - Number(n);
+      switch (dir) {
+        case "up":
+          aim -= Number(n);
+          break;
+        case "down":
+          aim += Number(n);
+          break;
+        case "forward":
+          horizontal += Number(n);
+          if (useAim) {
+            vertical += Number(n) * aim;
+          }
+          break;
       }
-      return acc + Number(n);
-    }, 0)
-  
-  const horizontalPos = instructions
-    .filter((i) => i[0] === "f")
-    .reduce((acc, i) => {
-      const n = i[i.length-1];
-      return acc + Number(n);
-    }, 0)
-  
-  return depth * horizontalPos;
+      return { vertical, horizontal, aim };
+    }, { vertical: 0, horizontal: 0, aim: 0 });
+
+  return pos.horizontal * (pos.vertical || pos.aim);
 };
 
 export const day02: Handler = (lines, part) => {
   const instructions = lines.filter((l) => l !== "");
 
-  return dive(instructions);
+  return dive(instructions, part === 2);
 };
