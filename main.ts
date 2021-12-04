@@ -3,6 +3,7 @@ import { readAll } from "https://deno.land/std@0.116.0/streams/conversion.ts";
 import { days } from "./days.ts";
 
 const usage = `Usage: deno run main.ts day part
+
 Puzzle input is expected via stdin.`;
 
 const [sDay, sPart] = Deno.args;
@@ -18,7 +19,7 @@ const lines = new TextDecoder()
   .decode(await readAll(Deno.stdin))
   .split("\n");
 
-const dayHandler = days[day];
+const dayHandler = days[day-1];
 
 if (!dayHandler) {
   console.log(`Day ${day} not implemented`);

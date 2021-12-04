@@ -16,7 +16,7 @@ const filterByBitCriteria = (binaryNumbers: string[], mostCommon: boolean) => {
     }
   }
   return filteredBinaryNumbers[0];
-}
+};
 
 const mostCommonBit = (binaryColumn: string) =>
   [...binaryColumn].reduce(
