@@ -8,6 +8,13 @@ type Board = {
   numbersInColumn: number[][];
   uncrossedNumbersInColumn: number[];
   allNumbers: number[];
+  hasWon: boolean;
+};
+
+type Win = {
+  winningNumber: number;
+  winningBoard: Board;
+  drawnNumbers: number[];
 };
 
 const parseBoard = (boardLines: string[]) => {
@@ -32,19 +39,34 @@ const parseBoard = (boardLines: string[]) => {
     numbersInColumn,
     uncrossedNumbersInColumn: numbersInColumn.map((col) => col.length),
     allNumbers: boardRows.flat(),
+    hasWon: false,
   };
 };
 
-const findWinningBoard = (numbersToDraw: number[], boards: Board[]) => {
+const calculateBoardWins = function* (
+  numbersToDraw: number[],
+  boards: Board[],
+) {
   const drawnNumbers: number[] = [];
   for (const number of numbersToDraw) {
     drawnNumbers.push(number);
     for (const board of boards) {
+      if (board.numbersInRow[0][0] === 3) {
+        const _ = "";
+      }
+      if (board.hasWon) {
+        continue;
+      }
       for (let row = 0; row < board.rowCount; row++) {
         if (board.numbersInRow[row].includes(number)) {
           board.uncrossedNumbersInRow[row]--;
           if (board.uncrossedNumbersInRow[row] === 0) {
-            return { winningNumber: number, winningBoard: board, drawnNumbers };
+            board.hasWon = true;
+            yield {
+              winningNumber: number,
+              winningBoard: board,
+              drawnNumbers: [...drawnNumbers],
+            };
           }
         }
       }
@@ -52,13 +74,20 @@ const findWinningBoard = (numbersToDraw: number[], boards: Board[]) => {
         if (board.numbersInColumn[col].includes(number)) {
           board.uncrossedNumbersInColumn[col]--;
           if (board.uncrossedNumbersInColumn[col] === 0) {
-            return { winningNumber: number, winningBoard: board, drawnNumbers };
+            board.hasWon = true;
+            yield {
+              winningNumber: number,
+              winningBoard: board,
+              drawnNumbers: [...drawnNumbers],
+            };
           }
         }
       }
     }
+    if (boards.every((board) => board.hasWon)) {
+      return;
+    }
   }
-  throw new Error("Could not find winning board");
 };
 
 export const day04: Handler = (lines, part) => {
@@ -76,10 +105,17 @@ export const day04: Handler = (lines, part) => {
 
   const parsedBoards = boards.map((board) => parseBoard(board));
 
-  const { winningNumber, winningBoard, drawnNumbers } = findWinningBoard(
-    numbersToDraw,
-    parsedBoards,
-  );
+  let winToPick: Win | undefined;
+  for (const win of calculateBoardWins(numbersToDraw, parsedBoards)) {
+    if (part === 1) {
+      winToPick = win;
+      break;
+    }
+
+    winToPick = win;
+  }
+
+  const { winningNumber, winningBoard, drawnNumbers } = winToPick!;
 
   const uncrossedNumbersSum = winningBoard.allNumbers
     .filter((n) => !drawnNumbers.includes(n))
