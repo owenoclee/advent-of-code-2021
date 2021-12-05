@@ -50,6 +50,7 @@ export const pointsOnLine = function* (pair: CoordinatePair) {
   if (diff.y !== 0) {
     shift.y = diff.y / Math.abs(diff.y);
   }
+
   for (
     let { x, y } = pair.start;
     Math.abs(pair.end.x - x) > 0 || Math.abs(pair.end.y - y) > 0;
