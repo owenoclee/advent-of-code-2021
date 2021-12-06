@@ -1,16 +1,14 @@
 import { assertEquals } from "https://deno.land/std@0.117.0/testing/asserts.ts";
 import {
-  agesListFromCounts,
   countByAge,
   parseInputLines,
-  shiftCounts,
+  shiftAndWrapArray,
   simulateDayByCounts,
   sumOfFishCounts,
 } from "./day06.ts";
 
 Deno.test("parseInputLines", () => {
   const lines = [
-    "",
     "3,4,3,1,2",
     "",
   ];
@@ -28,10 +26,10 @@ Deno.test("countsByAge", () => {
   assertEquals(counts, [1, 2, 1, 3, 2, 5, 1, 0, 1]);
 });
 
-Deno.test("shiftCounts", () => {
+Deno.test("shiftAndWrapArray", () => {
   const counts = [1, 2, 1, 3, 2, 5, 1, 0, 1];
 
-  const shiftedCounts = shiftCounts(counts);
+  const shiftedCounts = shiftAndWrapArray(counts);
 
   assertEquals(shiftedCounts, [2, 1, 3, 2, 5, 1, 0, 1, 1]);
 });
@@ -42,14 +40,6 @@ Deno.test("sumOfFishCounts", () => {
   const sum = sumOfFishCounts(counts);
 
   assertEquals(sum, 1 + 2 + 1 + 3 + 2 + 5 + 1 + 0 + 1);
-});
-
-Deno.test("agesListFromCounts", () => {
-  const counts = [1, 2, 1, 3, 2, 5, 1, 0, 1];
-
-  const ages = agesListFromCounts(counts);
-
-  assertEquals(ages, [0, 1, 1, 2, 3, 3, 3, 4, 4, 5, 5, 5, 5, 5, 6, 8]);
 });
 
 Deno.test("simulateDayByCounts", () => {
