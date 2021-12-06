@@ -3,6 +3,7 @@ import { day02 } from "./day02/day02.ts";
 import { day03 } from "./day03/day03.ts";
 import { day04 } from "./day04/day04.ts";
 import { day05 } from "./day05/day05.ts";
+import { day06 } from "./day06/day06.ts";
 
 export const days = [
   day01,
@@ -10,4 +11,5 @@ export const days = [
   day03,
   day04,
   day05,
+  day06,
 ];
